@@ -34,6 +34,7 @@ html
             $("#lastPrice").text(json.data[0].lastPrice.toFixed(8));
             $("#lblConnections").text(json.data[0].connections + ' connections');
             $("#lblBlockcount").text(json.data[0].blockcount + ' blocks');
+            $("#lblBlocks").text(json.data[0].blockcount);
             $("#lblX1").text(' ');
           }});
         }
@@ -101,6 +102,11 @@ html
                 a.navbar-link.loading(href='/reward')
                   span.fa.fa-money
                   span.menu-text #{lan.heavy_title}
+            if settings.display.blocks == true
+              li#blocks
+                a.navbar-link.loading(href='/blocks')
+                  span.fa.fa-th-large
+                  span.menu-text #{lan.heavy_blocks}
             if settings.display.movement == true
               li#movement 
                 a.navbar-link.loading(href='/movement') 
@@ -129,61 +135,81 @@ html
           ul.nav.navbar-nav.navbar-right
             li.dropdown
               a.dropdown-toggle(href="/language", data-toggle="dropdown",data-hover="dropdown" ,data-close-others="false", role="button")
-                if (check_lan() == 'eng')
+                if (check_lan() == 'en_us')
                   img(src="/images/en_US.png")
                   span.menu-text EN
-                  span.caret
-                 else
+                   span.caret
+                else if (check_lan() == 'ja_jp')
+                  img(src="/images/jp_JA.png")
+                  span.menu-text JP
+                   span.caret
+                else if (check_lan() == 'th_th')
+                  img(src="/images/th_TH.png")
+                  span.menu-text TH
+                   span.caret
+                else if (check_lan() == 'ru_ru')
+                  img(src="/images/ru_RU.png")
+                  span.menu-text RU
+                   span.caret
+                else
                    img(src="/images/zh_CN.png")
                    span.menu-text ZH
                     span.caret
               ul.dropdown-menu(style="min-width: 70px;",role="menu")
                 li
-                  a(href="/language")
-                    if (check_lan() == 'eng')
-                      img(src="/images/zh_CN.png")
-                      span.menu-text ZH
-                    else
+                  if (check_lan() != 'en_us')
+                    a(href="/language/en_us")
                       img(src="/images/en_US.png")
                       span.menu-text EN
+                  if (check_lan() != 'zh_cn')
+                    a(href="/language/zh_cn")
+                      img(src="/images/zh_CN.png")
+                      span.menu-text ZH
+                  if (check_lan() != 'ja_jp')
+                    a(href="/language/ja_jp")
+                      img(src="/images/jp_JA.png")
+                      span.menu-text JP
+                  if (check_lan() != 'th_th')
+                    a(href="/language/th_th")
+                      img(src="/images/th_TH.png")
+                      span.menu-text TH
+                  if (check_lan() != 'ru_ru')
+                    a(href="/language/ru_ru")
+                      img(src="/images/ru_RU.png")
+                      span.menu-text RU
     .col-md-12
       .row.text-center
         .col-md-2.col-md-offset-1
           .panel.panel-default.hidden-sm.hidden-xs
             .panel-heading
-              if settings.nethash == 'netstakeweight'
-                strong #{lan.stakingweight}
-              else
-                  if settings.nethash_units == 'K'
-                    strong #{lan.network} (KH/s)
-                  else if settings.nethash_units == 'M'
-                    strong #{lan.network} (MH/s)
-                  else if settings.nethash_units == 'G'
-                    strong #{lan.network} (GH/s)
-                  else if settings.nethash_units == 'T'
-                    strong #{lan.network} (TH/s)
-                  else if settings.nethash_units == 'P'
-                    strong #{lan.network} (PH/s)
-                  else if settings.nethash_units == 'H'
-                    strong #{lan.network} (H/s)
+              strong #{lan.heavy_blocks}
             .panel-body
-              if settings.index.difficulty == 'Hybrid'
-               label#hashrate - 
-               <br>
-               label#lblX1  
-              else  
-               label#hashrate - 
+              label#lblBlocks -
         .col-md-2
           .panel.panel-default.hidden-sm.hidden-xs
             .panel-heading
-              strong #{lan.difficulty}
-            .panel-body
-              if settings.index.difficulty == 'Hybrid'
-               label#difficulty -
-               <br>
-               label#difficultyHybrid -
+              if settings.nethash == 'netstakeweight'
+                strong #{lan.stakingweight}
               else
-               label#difficulty -
+                if settings.nethash_units == 'K'
+                  strong #{lan.network} (KH/s)
+                else if settings.nethash_units == 'M'
+                  strong #{lan.network} (MH/s)
+                else if settings.nethash_units == 'G'
+                  strong #{lan.network} (GH/s)
+                else if settings.nethash_units == 'T'
+                  strong #{lan.network} (TH/s)
+                else if settings.nethash_units == 'P'
+                  strong #{lan.network} (PH/s)
+                else if settings.nethash_units == 'H'
+                  strong #{lan.network} (H/s)
+            .panel-body
+             if settings.index.difficulty == 'Hybrid'
+               label#hashrate -
+               <br>
+               label#lblX1
+              else
+               label#hashrate -
         .col-md-2.col-sm-12
           img(src='#{settings.logo}', style='margin-top:-15px;height:128px;')
         .col-md-2
@@ -227,6 +253,11 @@ html
             li.pull-left
               a#facebook-icon(href="https://www.facebook.com/#{settings.facebook}", target='_blank')
                 span.glyphicon.fa.fa-facebook
+        if settings.display.discord
+          ul.nav.navbar-nav
+            li.pull-left
+              a#discord-icon(href="https://discord.gg/#{settings.discord}", target='_blank')
+                span.glyphicon.fa.fa-comments
         if settings.display.googleplus
           ul.nav.navbar-nav
             li.pull-left
@@ -236,7 +267,7 @@ html
         ul.nav
           li.text-center(style='margin-left:80px;margin-right:80px;')
             p(style='margin-top:15px;') 
-              a.navbar-link(href='https://github.com/iquidus/explorer', target='_blank') Powered by Iquidus Explorer 
+              a.navbar-link(href='https://github.com/Whitecoin-org/explorer/', target='_blank') Powered by Whitecoin
       span.connections
         label#lblBlockcount.label.label-default -
         label#lblConnections.label.label-default -
