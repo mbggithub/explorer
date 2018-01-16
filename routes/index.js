@@ -97,10 +97,7 @@ function route_get_address(res, hash, count) {
     if (address) {
       var txs = [];
       var hashes = address.txs.reverse();
-      if (address.txs.length < count) {
-        count = address.txs.length;
-      }
-      lib.syncLoop(count, function (loop) {
+      lib.syncLoop(address.txs.length, function (loop) {
         var i = loop.iteration();
         db.get_tx(hashes[i].addresses, function(tx) {
           if (tx) {
